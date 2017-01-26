@@ -1,0 +1,32 @@
+<div class="container">
+<div class="col-sm-8">
+    <div class="page-header"><h1>QAPP Data Form</h1></div>
+
+    <!-- FORM -->
+    <form name="userForm" ng-submit="submitForm(userForm.$valid)" novalidate>
+        <div class="form-group"  ng-class="{ 'has-error': userForm.question.$invalid }">
+            <label>Question</label>
+            <input type="text" name="question" class="form-control" ng-model="qa.question" required placeholder="Question?">
+        </div> 
+        <div class="form-group">
+            <label>Answer</label>
+          <ng-quill-editor toolbar="true" ng-model="qa.answer" placeholder="Answer"></ng-quill-editor>
+        </div>
+        <div class="form-group">
+            <label>Tags</label>
+            <input type="text" name="tags" class="form-control" ng-model="qa.tags" ng-minlength="3" ng-maxlength="8">
+        </div>
+        <div class="form-group">
+            <label>Versions</label>
+            <input type="text" name="versions" class="form-control" ng-model="qa.versions" ng-minlength="3" ng-maxlength="8">
+        </div>
+        <div class="form-group">
+          <label>Level</label>
+          <select name="level" class="form-control" ng-model="qa.level" ng-options="level.id as level.name for level in levels"></select>
+        </div>
+        <button type="submit" class="btn btn-primary" ng-click = "saveModel()">Submit</button>
+
+    </form>
+
+</div>
+</div>
