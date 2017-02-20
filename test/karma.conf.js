@@ -27,6 +27,10 @@ module.exports = function(config) {
       'bower_components/bootstrap-css/js/bootstrap.min.js',
       'bower_components/quill/dist/quill.js',
       'bower_components/ngquill/src/ng-quill.min.js',
+      'bower_components/bootbox/bootbox.js',
+      'bower_components/ngBootbox/dist/ngBootbox.js',
+      'bower_components/angular-animate/angular-animate.js',
+      'bower_components/angular-busy/dist/angular-busy.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

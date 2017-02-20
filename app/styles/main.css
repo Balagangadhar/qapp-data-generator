@@ -98,3 +98,10 @@ body {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+.error .modal-header{
+  background-color: #c9302c;
+  color : #fff;
+}
+.create-form-div {
+   outline: none !important;
+}

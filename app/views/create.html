@@ -1,15 +1,18 @@
+<div class="create-form-div" ng-keydown="onKeyPress($event)" tabindex="10">
 <div class="container">
-<div class="col-sm-8">
+<div class="col-sm-8" ng-show="showMainForm()">
+    <a href='/#/'>Home</a>
     <div class="page-header"><h1>QAPP Data Form</h1></div>
-
+<div cg-busy="{promise:getDataPromise,message:'Saving...'}">
+  <div cg-busy="{promise:saveDataPromise,message:'Saving...'}">
     <!-- FORM -->
     <form name="userForm" ng-submit="submitForm(userForm.$valid)" novalidate>
         <div class="form-group"  ng-class="{ 'has-error': userForm.question.$invalid }">
             <label>Question</label>
             <input type="text" name="question" class="form-control" ng-model="qa.question" required placeholder="Question?">
-        </div> 
+        </div>
         <div class="form-group">
-            <label>Answer</label>
+            <label ng-dblclick="toggleFullscreenMode()">Answer(Double click to view full screen mode) </label>
           <ng-quill-editor toolbar="true" ng-model="qa.answer" placeholder="Answer"></ng-quill-editor>
         </div>
         <div class="form-group">
@@ -24,9 +27,16 @@
           <label>Level</label>
           <select name="level" class="form-control" ng-model="qa.level" ng-options="level.id as level.name for level in levels"></select>
         </div>
-        <button type="submit" class="btn btn-primary" ng-click = "saveModel()">Submit</button>
-
+        <button type="submit" class="btn btn-danger"  ng-click= "onCancelBtnClick()">Cancel</button>
+        <button type="submit" class="btn btn-primary" ng-show='isNextVisible()' ng-click = "addNext()">Add Next</button>
+        <button type="submit" class="btn btn-primary" ng-click = "onSaveBtnClick()">Submit</button>
     </form>
-
+</div>
+</div>
+</div>
+</div>
+<div ng-show="showFullscreenAnswer()">
+    <label ng-dblclick="toggleFullscreenMode()">Answer(Double click to exit fullscreen) </label>
+  <ng-quill-editor toolbar="true" ng-model="qa.answer" placeholder="Answer"></ng-quill-editor>
 </div>
 </div>
