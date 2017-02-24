@@ -3,16 +3,17 @@
 /**
  * @ngdoc function
  * @name qappDataGeneratorApp.controller:CreateCtrl
- * @description
- * # CreateCtrl
- * Controller of the qappDataGeneratorApp
+ * @description # CreateCtrl Controller of the qappDataGeneratorApp
  */
 angular.module('qappDataGeneratorApp')
   .controller('CreateCtrl', function ($scope,$http,$location,$ngBootbox) {
+    $ngBootbox.setDefaults({
+    animate: true,
+    backdrop: true
+});
     $scope.params = $location.search();
-
     $scope.fullscreenAnswer = false;
-
+    $scope.unsavedQuestionCount = 0;
     $scope.levels = [{
         id: 'basic',
         name: "Basic"
@@ -45,7 +46,7 @@ angular.module('qappDataGeneratorApp')
           .then(function() {
             $scope.navigateToHome();
           }, function() {
-              console.log('Confirm dismissed!');
+              // console.log('Confirm dismissed!');
           });
       } else {
         $location.url('/');
@@ -62,7 +63,22 @@ angular.module('qappDataGeneratorApp')
       return $scope.data.length>0;
     }
     $scope.addNext = function(){
+      $scope.$broadcast('show-errors-check-validity');
+      if ($scope.userForm.$invalid) {
+        return;
+      }
       this.addModelToData();
+      $ngBootbox.customDialog({
+         message: 'Data has been saved in local object.',
+         title : 'Local Storage',
+         size: 'small',
+         buttons: {
+         success: {
+             label: "OK",
+             className: "btn-success"
+         }
+       }
+     });
       $scope.resetForm();
     }
     $scope.addModelToData = function(){
@@ -85,22 +101,35 @@ angular.module('qappDataGeneratorApp')
         this.toggleFullscreenMode();
       }
     }
-    $scope.onAnswerLblClick = function(){
-      console.log('ansewr');
+    $scope.showBadge = function(){
+      return $scope.data.length>0;
     }
     $scope.onSaveBtnClick = function(){
-      this.addModelToData();
-      //var serverData =[] = $scope.getDataFromRemoteServer();
+      if ($scope.data.length <=0) {
+        $ngBootbox.customDialog({
+           message: 'You don\'t have local data to save on to the remote server',
+           title : 'No Data',
+           size: 'small',
+           buttons: {
+           success: {
+               label: "OK",
+               className: "btn-success"
+           }
+         }
+       });
+        return;
+      }
+
       var req = {
                  method: 'GET',
                  url: 'https://api.github.com/repos/Balagangadhar/qappdata/contents/'+$scope.params.technology+'.json?_rn='+Math.random()*100000000000000000,
                  headers: {
                    'Content-Type':'application/x-www-form-urlencoded',
-                    'Authorization': 'token bdac66697a6a4e626437508289b6fd0c87cdceee',
+                    'Authorization': 'token '+$scope.params.authKey,
                  }
                 }
 
-      $scope.getDataPromise = $http(req)//get("https://api.github.com/repos/Balagangadhar/qappdata/contents/java.json?_rn="+Math.random()*100000000000000000)
+      $scope.getDataPromise = $http(req)
         .then(function(response) {
         var serverDataSha = response.data.sha;
         var serverDataContent =  JSON.parse(atob(response.data.content));
@@ -125,7 +154,7 @@ angular.module('qappDataGeneratorApp')
        });
 
      }).finally(function() {
-       console.log('final')
+
      });
     }
     $scope.saveDataOnRemoteServer = function(encodedDataTobeSaved,serverDataSha){
@@ -134,7 +163,7 @@ angular.module('qappDataGeneratorApp')
                  url: 'https://api.github.com/repos/Balagangadhar/qappdata/contents/'+$scope.params.technology+'.json',
                  headers: {
                    'Content-Type':'application/x-www-form-urlencoded',
-                    'Authorization': 'token bdac66697a6a4e626437508289b6fd0c87cdceee',
+                    'Authorization': 'token '+$scope.params.authKey,
                  },
                  data: {
                            "message": "Commit From QAPP Generator",

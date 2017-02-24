@@ -1,35 +1,42 @@
+  <div ng-include src="'views/navbar.html'"></div>
 <div class="create-form-div" ng-keydown="onKeyPress($event)" tabindex="10">
 <div class="container">
 <div class="col-sm-8" ng-show="showMainForm()">
-    <a href='/#/'>Home</a>
-    <div class="page-header"><h1>QAPP Data Form</h1></div>
+<div><h1>QAPP Data Form<span class="badge" ng-show="showBadge()">{{data.length}} Unsaved Questions</span></h1></div>
 <div cg-busy="{promise:getDataPromise,message:'Saving...'}">
   <div cg-busy="{promise:saveDataPromise,message:'Saving...'}">
+
     <!-- FORM -->
-    <form name="userForm" ng-submit="submitForm(userForm.$valid)" novalidate>
-        <div class="form-group"  ng-class="{ 'has-error': userForm.question.$invalid }">
-            <label>Question</label>
-            <input type="text" name="question" class="form-control" ng-model="qa.question" required placeholder="Question?">
+    <form name="userForm" novalidate>
+        <div class="form-group required" show-errors>
+            <label class="control-label">Question</label>
+            <input type="text" name="question" class="form-control" ng-model="qa.question" placeholder="Question?" required>
+             <p class="help-block" ng-if="userForm.question.$error.required">The Question is required</p>
         </div>
-        <div class="form-group">
-            <label ng-dblclick="toggleFullscreenMode()">Answer(Double click to view full screen mode) </label>
-          <ng-quill-editor toolbar="true" ng-model="qa.answer" placeholder="Answer"></ng-quill-editor>
+        <div class="form-group required" show-errors>
+            <label class="control-label" ng-dblclick="toggleFullscreenMode()">Answer(Double click to view full screen mode) </label>
+          <ng-quill-editor toolbar="true" ng-model="qa.answer"></ng-quill-editor>
+            <p class="help-block" ng-if="userForm.answer.$error.required">The answer field is required</p>
         </div>
-        <div class="form-group">
-            <label>Tags</label>
-            <input type="text" name="tags" class="form-control" ng-model="qa.tags" ng-minlength="3" ng-maxlength="8">
+        <div class="form-group required" show-errors>
+            <label class="control-label">Tags</label>
+            <input type="text" name="tags" class="form-control" ng-model="qa.tags" required>
+            <p class="help-block" ng-if="userForm.tags.$error.required">The Tags field is required</p>
         </div>
         <div class="form-group">
             <label>Versions</label>
-            <input type="text" name="versions" class="form-control" ng-model="qa.versions" ng-minlength="3" ng-maxlength="8">
+            <input type="text" name="versions" class="form-control" ng-model="qa.versions">
         </div>
-        <div class="form-group">
-          <label>Level</label>
+        <div class="form-group required" show-errors>
+          <label class="control-label">Level</label>
           <select name="level" class="form-control" ng-model="qa.level" ng-options="level.id as level.name for level in levels"></select>
+            <p class="help-block" ng-if="userForm.level.$error.required">The Level is required</p>
         </div>
-        <button type="submit" class="btn btn-danger"  ng-click= "onCancelBtnClick()">Cancel</button>
-        <button type="submit" class="btn btn-primary" ng-show='isNextVisible()' ng-click = "addNext()">Add Next</button>
-        <button type="submit" class="btn btn-primary" ng-click = "onSaveBtnClick()">Submit</button>
+        <div class="text-right">
+          <button type="submit" class="btn btn-danger"  ng-click= "onCancelBtnClick()">Cancel</button>
+          <button type="submit" class="btn btn-primary" ng-show='isNextVisible()' ng-click = "addNext()">Add Next</button>
+          <button type="submit" class="btn btn-primary" ng-click = "onSaveBtnClick()">Submit</button>
+      </div>
     </form>
 </div>
 </div>
